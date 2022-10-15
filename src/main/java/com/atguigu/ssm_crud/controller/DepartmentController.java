@@ -38,6 +38,7 @@ public class DepartmentController {
     public void GitTest(){
         System.out.println("GitTest2");
         System.out.println("GitTest3");
+        System.out.println("GitTest4");
     }
 
 
