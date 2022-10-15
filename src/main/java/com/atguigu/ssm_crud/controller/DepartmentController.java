@@ -35,5 +35,9 @@ public class DepartmentController {
         return Msg.success("处理成功").add("depts",depts);
     }
 
+    public void GitTest(){
+        System.out.println("GitTest2");
+    }
+
 
 }
