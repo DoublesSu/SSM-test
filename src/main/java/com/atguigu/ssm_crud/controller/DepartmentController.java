@@ -40,6 +40,7 @@ public class DepartmentController {
         System.out.println("GitTest3");
         System.out.println("GitTest4");
         System.out.println("GitTest5-master");
+        System.out.println("GitTest5-hot-fix");
     }
 
 
