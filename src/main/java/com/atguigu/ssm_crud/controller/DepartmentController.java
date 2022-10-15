@@ -39,7 +39,7 @@ public class DepartmentController {
         System.out.println("GitTest2");
         System.out.println("GitTest3");
         System.out.println("GitTest4");
-        System.out.println("GitTest5");
+        System.out.println("GitTest5-hotfix");
     }
 
 
