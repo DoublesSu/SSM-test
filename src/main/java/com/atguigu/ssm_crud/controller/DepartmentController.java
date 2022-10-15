@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author Su
  * version 1.0
- * @date 2022/10/12 16:28
+ * @Date 2022/10/12 16:28
  */
 
 @Controller
@@ -39,6 +39,7 @@ public class DepartmentController {
         System.out.println("GitTest2");
         System.out.println("GitTest3");
         System.out.println("GitTest4");
+        System.out.println("GitTest5");
     }
 
 
