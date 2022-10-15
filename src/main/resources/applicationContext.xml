@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+    <!--
+        开启Spring管理的组件扫描
+        载入jdbc.properties配置文件
+        配置数据库（DruidDataSource、c3p0DataSource）
+            driverClassName、url、username、password
+        整合MyBatis持久层相关
+            configurationLocation：mybatis-config.xml的文件路径
+                    plugins：PageHelper（分页插件）
+            typeAliasPackage、dataSource、mapperLocations（接口与映射文件路径相同时不用配置）
+
+
+    -->
+
+
+    <!--Spring的配置文件，主要配置与业务逻辑相关-->
+    <!--    1、开启组件扫描-->
+    <context:component-scan base-package="com.atguigu.ssm_crud">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <!--    2、加载jdbc配置文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+    <!--    3、配置数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+    <!--    4、配置MyBatis整合-->
+    <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--        4.1、myBatis配置文件路径-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="typeAliasesPackage" value="com.atguigu.ssm_crud.pojo"></property>
+        <!--        设置mapper的映射文件路径-->
+        <property name="mapperLocations" value="classpath:com/atguigu/ssm_crud/mapper/*xml"></property>
+    </bean>
+
+
+    <!--    5、扫描并将mapper的实现加入到IOC容器-->
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.atguigu.ssm_crud.mapper"></property>
+    </bean>
+
+    <!--6、数据源事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!--7、配置一个可以执行批量的sqlSession-->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactoryBean"></constructor-arg>
+        <constructor-arg name="executorType" value="BATCH"></constructor-arg>
+    </bean>
+
+
+    <!--    &lt;!&ndash;    7、开启基于注解的事务？？？&ndash;&gt;-->
+    <!--    <aop:config>-->
+    <!--&lt;!&ndash;        切入点表达式&ndash;&gt;-->
+    <!--        <aop:pointcut expression="execution(* com.atguigu.ssm_crud.service..*(..))" id="txPoint"/>-->
+    <!--&lt;!&ndash;        配置事务增强（通知）&ndash;&gt;-->
+    <!--        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"></aop:advisor>-->
+    <!--    </aop:config>-->
+    <!--    &lt;!&ndash;    8、配置事务增强,事务如何切入&ndash;&gt;-->
+    <!--    <tx:advice id="txAdvice">-->
+    <!--        <tx:attributes>-->
+    <!--            <tx:method name="*"></tx:method>-->
+    <!--        </tx:attributes>-->
+    <!--    </tx:advice>-->
+</beans>
